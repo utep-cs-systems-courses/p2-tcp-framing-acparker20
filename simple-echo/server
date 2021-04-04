@@ -1,0 +1,9 @@
+student@systems-vm:~/Documents/os-shell-acparker20/p2-tcp-framing-acparker20/simple-echoxshell
+If 'xshell' is not a typo you can use command-not-found to lookup the package that contains it, like this:
+    cnf xshell
+student@systems-vm:~/Documents/os-shell-acparker20/p2-tcp-framing-acparker20/simple-echo> ./threadClient.py
+creating sock: af=2, type=1, proto=6
+ attempting to connect to ('127.0.0.1', 50001)
+MADE CONNECTION
+send test.txt host:try2.txt
+try2.txt

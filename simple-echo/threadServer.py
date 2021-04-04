@@ -6,6 +6,7 @@ import socket, sys, re, os, time
 sys.path.append("../lib")       # for params
 import params
 from sockFrame import frameSock
+import Threader
 
 switchesVarDefaults = (
     (('-l', '--listenPort') ,'listenPort', 50001),
@@ -14,7 +15,7 @@ switchesVarDefaults = (
 
 
 
-progname = "echoserver"
+progname = "threadServer"
 paramMap = params.parseParams(switchesVarDefaults)
 
 listenPort = paramMap['listenPort']
@@ -33,22 +34,6 @@ s.listen(1)  # allow only one outstanding request
 while True:
     
     conn, addr = s.accept()  # wait until incoming connection request (and accept it)
-    fs = frameSock(conn)
-
+    Threader.Worker(conn, addr).start() #starts thread
     
-    if os.fork()==0: #in child process, if greater than zero, in parent process
-
-        msgContent = (fs.messagercv())#receive command from client
-        print(msgContent)
-        filename = msgContent
-        print(filename)
-
-        if os.path.isfile(filename): #check for duplicate file
-            fs.messagesend(b"Incorrect")
-            conn.shutdown(socket.SHUT_WR)
-        else:
-            fs.messagesend(b"Correct")
-
-        filedir = os.open(filename, os.O_CREAT | os.O_WRONLY) #open and write into file
-        os.write(filedir, fs.messagercv().encode())
-        os.close(filedir)
+    

@@ -14,7 +14,7 @@ switchesVarDefaults = (
     (('-?', '--usage'), "usage", False), # boolean (set if present)
     )
 
-progname = "frameClient"
+progname = "threadClient"
 paramMap = params.parseParams(switchesVarDefaults)
 
 server, usage = paramMap["server"], paramMap["usage"]
@@ -66,27 +66,21 @@ fs = frameSock(s)
 input = my_getLine()
 command,localfile, host, remotefile = parseTCPInput(input)
 
+print(localfile)
 print(remotefile)
 fs.messagesend(remotefile.encode()) #sending file
 
 responsesvr = fs.messagercv() #receive servers response
+print(responsesvr)
 
-if responsesvr == "Incorrect":
+if responsesvr == "No":
     os.write(2, ("File cannot be transferred").encode())
-    sys.exit(1)
-
-else: #Correct
+    
+elif responsesvr == 'Ok': #If file is "Ok"
     filedir = os.open(localfile, os.O_RDONLY)
-    buf = ""
-    msg = ""
-
-    while True:
-        buf = os.read(filedir, 100) #read 512 bytes
-        data = buf.decode()
-        if len(data) == 0: #exit if empty data
-            break
-        msg += data #append data
-
-    fs.messagesend(msg.encode()) #send data as message
-    s.close()
+    message = os.read(filedir, 100)
+    fs.messagesend(message.encode())
+    result = fs.messagercv()
+    print(result)
+s.close()
         

@@ -71,11 +71,11 @@ fs.messagesend(remotefile.encode()) #sending file
 
 responsesvr = fs.messagercv() #receive servers response
 
-if responsesvr == "Incorrect":
+if responsesvr == "No":
     os.write(2, ("File cannot be transferred").encode())
     sys.exit(1)
 
-else: #Correct
+else: #If file is Ok
     filedir = os.open(localfile, os.O_RDONLY)
     buf = ""
     msg = ""
